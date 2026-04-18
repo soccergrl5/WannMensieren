@@ -11,12 +11,16 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
+import com.soccergrlstudios.wannmensieren.datamodel.LectureModel
+import com.soccergrlstudios.wannmensieren.datamodel.Weekdays
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var courseListDisplay: ListView
     private lateinit var courseNameList: ArrayList<String>
-    private lateinit var selectedCourseNameList: ArrayList<String>
+    private lateinit var selectedCoursesIndexList: ArrayList<Int>
+    private lateinit var selectedCoursesList: MutableList<CourseModel>
     private lateinit var itemAdapter: ArrayAdapter<String>
 
     private lateinit var okButton: Button
@@ -48,12 +52,29 @@ class MainActivity : AppCompatActivity() {
             "order_by" to "title"
         )
         //val courses = repository.fetchCourses(searchParams)
+        var courses: List<CourseModel>
+
+        courses = listOf(
+            CourseModel("Fach1", "001", 1,
+                listOf(
+                    LectureModel(Weekdays.MONDAY, "09:45", "11:115"),
+                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
+                )
+            ),
+            CourseModel("Fach2", "002", 1,
+                listOf(
+                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
+                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
+                )
+            )
+        )
 
         courseNameList = ArrayList()
-        courseNameList.add("Fach1")
-        courseNameList.add("Fach2")
+        for (course in courses){
+            courseNameList.add(course.name)
+        }
 
-        selectedCourseNameList = ArrayList()
+        selectedCoursesIndexList = ArrayList()
 
         courseListDisplay = findViewById(R.id.courseList)
 
@@ -61,20 +82,30 @@ class MainActivity : AppCompatActivity() {
         courseListDisplay.adapter = itemAdapter
 
         courseListDisplay.setOnItemClickListener{_, _, pos, _ ->
-            selectedCourseNameList.add(courseNameList.get(pos))
+            selectedCoursesIndexList.add(pos)
         }
 
         okButton = findViewById(R.id.ok)
         okButton.setOnClickListener {
-            var message: String = ""
+            selectedCoursesList = mutableListOf()
 
-            for(name in selectedCourseNameList){
-                message += name + ", "
+            for (course in selectedCoursesIndexList){
+                selectedCoursesList.add(courses[course])
             }
 
-            Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
-
             TransitionManager.go(scene_results)
+
+            //Call Function for Results
+
+            val results: List<List<CourseModel>> = listOf(selectedCoursesList)
+
+            courseResults(results)
+        }
+    }
+
+    fun courseResults(results: List<List<CourseModel>>) {
+        for(result in results[0]){
+            Toast.makeText(applicationContext, result.name, Toast.LENGTH_SHORT).show()
         }
     }
 }
