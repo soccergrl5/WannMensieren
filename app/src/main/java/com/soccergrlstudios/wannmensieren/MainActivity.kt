@@ -1,6 +1,8 @@
 package com.soccergrlstudios.wannmensieren
 
 import android.os.Bundle
+import android.transition.Scene
+import android.transition.TransitionManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
@@ -19,6 +21,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var okButton: Button
 
+    private lateinit var scene_courses: Scene
+    private lateinit var scene_results: Scene
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -29,10 +34,21 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        scene_courses = Scene.getSceneForLayout(findViewById(R.id.rootContainer), R.layout.scene_courses, this)
+        scene_results = Scene.getSceneForLayout(findViewById(R.id.rootContainer), R.layout.scene_results, this)
+
+        scene_courses.enter()
+
         selectCourseOverview()
     }
 
     fun selectCourseOverview() {
+        val searchParams = mapOf(
+            "semester_key" to "current",
+            "order_by" to "title"
+        )
+        //val courses = repository.fetchCourses(searchParams)
+
         courseNameList = ArrayList()
         courseNameList.add("Fach1")
         courseNameList.add("Fach2")
@@ -57,6 +73,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
+
+            TransitionManager.go(scene_results)
         }
     }
 }
