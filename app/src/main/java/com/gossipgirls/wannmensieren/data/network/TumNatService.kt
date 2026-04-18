@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object TumNatService {
-    private const val BASE_URL = "https://demo.campus.tum.de/"
+    private const val DEFAULT_BASE_URL = "https://demo.campus.tum.de/"
 
     private val httpClient: OkHttpClient by lazy {
         OkHttpClient.Builder()
@@ -17,12 +17,14 @@ object TumNatService {
             .build()
     }
 
-    val api: TumNatApi by lazy {
-        Retrofit.Builder()
-            .baseUrl(BASE_URL)
+    fun createApi(baseUrl: String = DEFAULT_BASE_URL): TumNatApi {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
             .client(httpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(TumNatApi::class.java)
     }
+
+    val api: TumNatApi by lazy { createApi() }
 }

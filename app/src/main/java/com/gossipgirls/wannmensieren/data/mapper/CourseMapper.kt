@@ -12,7 +12,7 @@ object CourseMapper {
         val dayOfWeek: Int,
         val startTime: String,
         val endTime: String,
-        val location: String
+        val location: String?
     )
 
     fun toDomain(dto: CourseApiDto): Course {
@@ -34,7 +34,7 @@ object CourseMapper {
                         dayOfWeek = it.dayOfWeek,
                         startTime = it.startTime,
                         endTime = it.endTime,
-                        location = it.location.orEmpty()
+                        location = it.location
                     )
                 }
                 .sortedWith(compareBy(Session::dayOfWeek, Session::startTime))
