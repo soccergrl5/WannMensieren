@@ -17,6 +17,7 @@ import com.soccergrlstudios.wannmensieren.datamodel.Weekdays
 
 class MainActivity : AppCompatActivity() {
 
+    //Course Selection
     private lateinit var courseListDisplay: ListView
     private lateinit var courseNameList: ArrayList<String>
     private lateinit var selectedCoursesIndexList: ArrayList<Int>
@@ -25,8 +26,24 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var okButton: Button
 
-    private lateinit var scene_courses: Scene
-    private lateinit var scene_results: Scene
+    //Result Display
+    private lateinit var resultListDisplay: ListView
+    private lateinit var resultInfoList: ArrayList<String>
+    private lateinit var resultAdapter: ArrayAdapter<String>
+
+    private lateinit var resultOption1btn: Button
+    private lateinit var resultOption2btn: Button
+    private lateinit var resultOption3btn: Button
+    private lateinit var resultOption4btn: Button
+
+    //Scenes
+    private lateinit var sceneCourses: Scene
+    private lateinit var sceneResults: Scene
+
+    private lateinit var sceneResultsOption1: Scene
+    private lateinit var sceneResultsOption2: Scene
+    private lateinit var sceneResultsOption3: Scene
+    private lateinit var sceneResultsOption4: Scene
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,26 +55,24 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        scene_courses = Scene.getSceneForLayout(findViewById(R.id.rootContainer), R.layout.scene_courses, this)
-        scene_results = Scene.getSceneForLayout(findViewById(R.id.rootContainer), R.layout.scene_results, this)
+        sceneCourses = Scene.getSceneForLayout(findViewById(R.id.rootContainer), R.layout.scene_courses, this)
+        sceneResults = Scene.getSceneForLayout(findViewById(R.id.rootContainer), R.layout.scene_results, this)
 
-        scene_courses.enter()
+        sceneCourses.enter()
 
         selectCourseOverview()
     }
 
     fun selectCourseOverview() {
-        val searchParams = mapOf(
+        /*val searchParams = mapOf(
             "semester_key" to "current",
             "order_by" to "title"
-        )
+        )*/
         //val courses = repository.fetchCourses(searchParams)
-        var courses: List<CourseModel>
-
-        courses = listOf(
+        val courses = listOf(
             CourseModel("Fach1", "001", 1,
                 listOf(
-                    LectureModel(Weekdays.MONDAY, "09:45", "11:115"),
+                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
                     LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
                 )
             ),
@@ -93,19 +108,85 @@ class MainActivity : AppCompatActivity() {
                 selectedCoursesList.add(courses[course])
             }
 
-            TransitionManager.go(scene_results)
+            TransitionManager.go(sceneResults)
 
             //Call Function for Results
 
-            val results: List<List<CourseModel>> = listOf(selectedCoursesList)
+            val results: List<List<CourseModel>> = listOf(selectedCoursesList, selectedCoursesList, selectedCoursesList, courses)
 
             courseResults(results)
         }
     }
 
     fun courseResults(results: List<List<CourseModel>>) {
-        for(result in results[0]){
-            Toast.makeText(applicationContext, result.name, Toast.LENGTH_SHORT).show()
+        sceneResultsOption1 = Scene.getSceneForLayout(findViewById(R.id.resultContainer), R.layout.scene_results_option1, this)
+        sceneResultsOption2 = Scene.getSceneForLayout(findViewById(R.id.resultContainer), R.layout.scene_results_option2, this)
+        sceneResultsOption3 = Scene.getSceneForLayout(findViewById(R.id.resultContainer), R.layout.scene_results_option3, this)
+        sceneResultsOption4 = Scene.getSceneForLayout(findViewById(R.id.resultContainer), R.layout.scene_results_option4, this)
+
+        TransitionManager.go(sceneResultsOption1)
+
+        resultInfoList = ArrayList()
+
+        specificResults(1, results)
+
+        resultOption1btn = findViewById(R.id.option1)
+        resultOption1btn.setOnClickListener {
+            TransitionManager.go(sceneResultsOption1)
+            specificResults(1, results)
         }
+
+        resultOption2btn = findViewById(R.id.option2)
+        resultOption2btn.setOnClickListener {
+            TransitionManager.go(sceneResultsOption2)
+            specificResults(2, results)
+        }
+
+        resultOption3btn = findViewById(R.id.option3)
+        resultOption3btn.setOnClickListener {
+            TransitionManager.go(sceneResultsOption3)
+            specificResults(3, results)
+        }
+
+        resultOption4btn = findViewById(R.id.option4)
+        resultOption4btn.setOnClickListener {
+            TransitionManager.go(sceneResultsOption4)
+            specificResults(4, results)
+        }
+    }
+
+    fun specificResults(number: Int, results: List<List<CourseModel>>){
+        resultInfoList.clear()
+
+        for(result in results[number - 1]){
+            var resultString = result.name + "\n"
+
+            for(lecture in result.lectures){
+                resultString += "${lecture.day}: ${lecture.startTime} - ${lecture.endTime}\n"
+            }
+
+            resultInfoList.add(resultString)
+        }
+
+        when(number) {
+            1 -> {
+                resultListDisplay = findViewById(R.id.resultList1)
+            }
+
+            2 -> {
+                resultListDisplay = findViewById(R.id.resultList2)
+            }
+
+            3 -> {
+                resultListDisplay = findViewById(R.id.resultList3)
+            }
+
+            4 -> {
+                resultListDisplay = findViewById(R.id.resultList4)
+            }
+        }
+
+        resultAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, resultInfoList)
+        resultListDisplay.adapter = resultAdapter
     }
 }
