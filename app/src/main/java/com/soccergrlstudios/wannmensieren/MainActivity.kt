@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var resultOption2btn: Button
     private lateinit var resultOption3btn: Button
     private lateinit var resultOption4btn: Button
+    private var currentResultOption: Int = 0
 
     //Scenes
     private lateinit var sceneCourses: Scene
@@ -125,6 +126,8 @@ class MainActivity : AppCompatActivity() {
         sceneResultsOption3 = Scene.getSceneForLayout(findViewById(R.id.resultContainer), R.layout.scene_results_option3, this)
         sceneResultsOption4 = Scene.getSceneForLayout(findViewById(R.id.resultContainer), R.layout.scene_results_option4, this)
 
+        currentResultOption = 1
+
         TransitionManager.go(sceneResultsOption1)
 
         resultInfoList = ArrayList()
@@ -133,26 +136,38 @@ class MainActivity : AppCompatActivity() {
 
         resultOption1btn = findViewById(R.id.option1)
         resultOption1btn.setOnClickListener {
-            TransitionManager.go(sceneResultsOption1)
-            specificResults(1, results)
+            if(currentResultOption != 1){
+                currentResultOption = 1
+                TransitionManager.go(sceneResultsOption1)
+                specificResults(1, results)
+            }
         }
 
         resultOption2btn = findViewById(R.id.option2)
         resultOption2btn.setOnClickListener {
-            TransitionManager.go(sceneResultsOption2)
-            specificResults(2, results)
+            if(currentResultOption != 2){
+                currentResultOption = 2
+                TransitionManager.go(sceneResultsOption2)
+                specificResults(2, results)
+            }
         }
 
         resultOption3btn = findViewById(R.id.option3)
         resultOption3btn.setOnClickListener {
-            TransitionManager.go(sceneResultsOption3)
-            specificResults(3, results)
+            if(currentResultOption != 3){
+                currentResultOption = 3
+                TransitionManager.go(sceneResultsOption3)
+                specificResults(3, results)
+            }
         }
 
         resultOption4btn = findViewById(R.id.option4)
         resultOption4btn.setOnClickListener {
-            TransitionManager.go(sceneResultsOption4)
-            specificResults(4, results)
+            if(currentResultOption != 4){
+                currentResultOption = 4
+                TransitionManager.go(sceneResultsOption4)
+                specificResults(4, results)
+            }
         }
     }
 
