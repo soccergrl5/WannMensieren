@@ -8,6 +8,13 @@ import com.gossipgirls.wannmensieren.data.model.CourseGroup
 import com.gossipgirls.wannmensieren.data.model.Session
 
 object CourseMapper {
+    private data class SessionDedupKey(
+        val dayOfWeek: Int,
+        val startTime: String,
+        val endTime: String,
+        val location: String
+    )
+
     fun toDomain(dto: CourseApiDto): Course {
         val courseId = dto.id ?: dto.courseId ?: ""
         val directSessions = dto.sessions.orEmpty().mapNotNull(::toSession)
@@ -22,7 +29,14 @@ object CourseMapper {
             moduleCode = dto.moduleCode,
             groups = mappedGroups,
             weeklySessions = (directSessions + groupedSessions)
-                .distinctBy { listOf(it.dayOfWeek, it.startTime, it.endTime, it.location ?: "") }
+                .distinctBy {
+                    SessionDedupKey(
+                        dayOfWeek = it.dayOfWeek,
+                        startTime = it.startTime,
+                        endTime = it.endTime,
+                        location = it.location.orEmpty()
+                    )
+                }
                 .sortedWith(compareBy(Session::dayOfWeek, Session::startTime))
         )
     }
