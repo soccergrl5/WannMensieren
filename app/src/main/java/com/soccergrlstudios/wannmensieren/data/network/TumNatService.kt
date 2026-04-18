@@ -1,6 +1,9 @@
 package com.soccergrlstudios.wannmensieren.data.network
 
 import com.soccergrlstudios.wannmensieren.data.api.TumNatApi
+import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
+import com.soccergrlstudios.wannmensieren.data.repository.CourseRepository
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -27,4 +30,10 @@ object TumNatService {
     }
 
     val api: TumNatApi by lazy { createApi() }
+    fun fetchCoursesBlocking(params: Map<String, String> = emptyMap()): List<CourseModel> {
+        val repository = CourseRepository(api)
+        return runBlocking {
+            repository.fetchCourses(params)
+        }
+    }
 }

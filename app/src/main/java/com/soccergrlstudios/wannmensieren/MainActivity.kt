@@ -11,6 +11,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.soccergrlstudios.wannmensieren.data.network.TumNatService
 import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
 import com.soccergrlstudios.wannmensieren.datamodel.LectureModel
 import com.soccergrlstudios.wannmensieren.datamodel.Weekdays
@@ -64,25 +65,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun selectCourseOverview() {
-        /*val searchParams = mapOf(
+        val searchParams = mapOf(
             "semester_key" to "current",
             "order_by" to "title"
-        )*/
-        //val courses = repository.fetchCourses(searchParams)
-        val courses = listOf(
-            CourseModel("Fach1", "001", 1,
-                listOf(
-                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
-                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
-                )
-            ),
-            CourseModel("Fach2", "002", 1,
-                listOf(
-                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
-                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
-                )
-            )
         )
+        val courses = TumNatService.fetchCoursesBlocking(searchParams);
+//        val courses = listOf(
+//            CourseModel("Fach1", "001", 1,
+//                listOf(
+//                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
+//                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
+//                )
+//            ),
+//            CourseModel("Fach2", "002", 1,
+//                listOf(
+//                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
+//                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
+//                )
+//            )
+//        )
 
         courseNameList = ArrayList()
         for (course in courses){
