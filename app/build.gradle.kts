@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     testImplementation(libs.junit)
-    testRuntimeOnly("org.jetbrains.kotlin:kotlin-stdlib:2.2.10")
+    testRuntimeOnly(libs.kotlin.stdlib)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
