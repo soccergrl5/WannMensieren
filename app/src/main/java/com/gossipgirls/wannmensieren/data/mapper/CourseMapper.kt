@@ -22,7 +22,7 @@ object CourseMapper {
             moduleCode = dto.moduleCode,
             groups = mappedGroups,
             weeklySessions = (directSessions + groupedSessions)
-                .distinctBy { Triple(it.dayOfWeek, it.startTime, it.endTime) }
+                .distinctBy { listOf(it.dayOfWeek, it.startTime, it.endTime, it.location ?: "") }
                 .sortedWith(compareBy(Session::dayOfWeek, Session::startTime))
         )
     }
