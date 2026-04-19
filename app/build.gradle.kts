@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.chaquo.python")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -16,6 +18,9 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+        ndk {
+            abiFilters += setOf("arm64-v8a", "x86_64")
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -35,6 +40,17 @@ android {
     }
 }
 
+chaquopy {
+    defaultConfig {
+        buildPython("C:/path/to/python.exe")
+
+        // Commands with multiple arguments must be passed as multiple strings.
+        buildPython("C:/path/to/py.exe", "-3.13")
+    }
+    productFlavors { }
+    sourceSets { }
+}
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -51,4 +67,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("org.jsoup:jsoup:1.15.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.10.0")
 }

@@ -6,15 +6,13 @@ import android.transition.TransitionManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.soccergrlstudios.wannmensieren.data.network.TumNatService
 import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
-import com.soccergrlstudios.wannmensieren.datamodel.LectureModel
-import com.soccergrlstudios.wannmensieren.datamodel.Weekdays
+import com.soccergrlstudios.wannmensieren.JsonSwap.toJson
 
 class MainActivity : AppCompatActivity() {
 
@@ -112,7 +110,7 @@ class MainActivity : AppCompatActivity() {
 
             TransitionManager.go(sceneResults)
 
-            //Call Function for Results
+            toJson(selectedCoursesList)
 
             val results: List<List<CourseModel>> = listOf(selectedCoursesList, selectedCoursesList, selectedCoursesList, courses)
 
