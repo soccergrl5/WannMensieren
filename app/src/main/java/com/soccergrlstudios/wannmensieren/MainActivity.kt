@@ -70,12 +70,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun selectCourseOverview() {
-        /*val searchParams = mapOf(
+        val searchParams = mapOf(
             "semester_key" to "current",
             "order_by" to "title"
         )
-        val courses = TumNatService.fetchCoursesBlocking(searchParams);*/
-        val courses = listOf(
+        val courses = TumNatService.fetchCoursesBlocking(searchParams);
+        /*val courses = listOf(
             CourseModel("Fach1", "001", 1,
                 listOf(
                     LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
                     LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
                 )
             )
-        )
+        )*/
 
         courseNameList = ArrayList()
         for (course in courses){
