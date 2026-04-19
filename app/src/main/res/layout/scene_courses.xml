@@ -18,7 +18,7 @@
             android:background="#101C85"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="Kurse"
+            app:title="Courses"
             app:titleTextColor="#FFFFFF" />
 
         <ListView
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="OK"
+        android:text="Select"
         android:textAlignment="center"
         android:textColor="#FFFFFF"
         android:backgroundTint="#101C85"
