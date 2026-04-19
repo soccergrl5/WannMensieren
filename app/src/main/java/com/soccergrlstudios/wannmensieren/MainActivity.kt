@@ -6,13 +6,15 @@ import android.transition.TransitionManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.soccergrlstudios.wannmensieren.data.network.TumNatService
 import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
-import com.soccergrlstudios.wannmensieren.JsonSwap.toJson
+//import com.soccergrlstudios.wannmensieren.JsonSwap.toJson
 
 class MainActivity : AppCompatActivity() {
 
@@ -93,11 +95,20 @@ class MainActivity : AppCompatActivity() {
 
         courseListDisplay = findViewById(R.id.courseList)
 
-        itemAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, courseNameList)
+        itemAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, courseNameList)
         courseListDisplay.adapter = itemAdapter
 
-        courseListDisplay.setOnItemClickListener{_, _, pos, _ ->
-            selectedCoursesIndexList.add(pos)
+        courseListDisplay.setOnItemClickListener{arg1, arg2, pos, _ ->
+            val test = itemAdapter.getView(pos, arg2, arg1)
+
+            if(selectedCoursesIndexList.contains(pos)){
+                selectedCoursesIndexList.remove(pos)
+                test.setBackgroundResource(R.color.none)
+            }
+            else{
+                selectedCoursesIndexList.add(pos)
+                test.setBackgroundResource(R.color.blue)
+            }
         }
 
         okButton = findViewById(R.id.ok)
@@ -110,7 +121,7 @@ class MainActivity : AppCompatActivity() {
 
             TransitionManager.go(sceneResults)
 
-            toJson(selectedCoursesList)
+            //toJson(selectedCoursesList)
 
             val results: List<List<CourseModel>> = listOf(selectedCoursesList, selectedCoursesList, selectedCoursesList, courses)
 
