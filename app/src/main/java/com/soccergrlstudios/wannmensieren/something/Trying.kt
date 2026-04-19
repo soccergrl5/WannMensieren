@@ -44,28 +44,4 @@ class Trying {
 
         return result
     }
-
-    fun ahhhhh(courses: List<CourseModel>): List<CourseModel>{
-        var pening = mutableListOf<CourseModel>()
-
-        for(course in courses){
-            var approved = true
-
-            for (lecture in course.lectures){
-                val time1 = lecture.startTime.split(':')
-                val time2 = lecture.endTime.split(':')
-
-                if(time1[0].toInt() < 11 && time2[0].toInt() > 14){
-                    approved = false
-                    break
-                }
-
-
-            }
-        }
-
-        val result = courses
-
-        return result
-    }
 }
