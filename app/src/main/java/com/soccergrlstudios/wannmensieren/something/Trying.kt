@@ -21,14 +21,15 @@ class Trying {
             var duringLunch = false
 
             for(lecture in course.lectures){
-                val time = lecture.startTime.split(':')
+                val time1 = lecture.startTime.split(':')
+                val time2 = lecture.endTime.split(':')
 
-                if(time[0] == "11" || time[0] == "12" || time[0] == "13" || time[1] == "12" || time[1] == "13" || time[1] == "14"){
+                if(time1[0] == "11" || time1[0] == "12" || time1[0] == "13" || time2[0] == "12" || time2[0] == "13" || time2[0] == "14"){
                     duringLunch = true
                     break
                 }
 
-                if(time[0].toInt() < 11 && time[1].toInt() > 14){
+                if(time1[0].toInt() < 11 && time2[0].toInt() > 14){
                     duringLunch = true
                     break
                 }
@@ -40,6 +41,30 @@ class Trying {
         }
 
         val result = pending
+
+        return result
+    }
+
+    fun ahhhhh(courses: List<CourseModel>): List<CourseModel>{
+        var pening = mutableListOf<CourseModel>()
+
+        for(course in courses){
+            var approved = true
+
+            for (lecture in course.lectures){
+                val time1 = lecture.startTime.split(':')
+                val time2 = lecture.endTime.split(':')
+
+                if(time1[0].toInt() < 11 && time2[0].toInt() > 14){
+                    approved = false
+                    break
+                }
+
+
+            }
+        }
+
+        val result = courses
 
         return result
     }
