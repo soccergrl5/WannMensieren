@@ -12,10 +12,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.soccergrlstudios.wannmensieren.data.mapper.CourseMapper
 import com.soccergrlstudios.wannmensieren.data.network.TumNatService
 import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
 import com.soccergrlstudios.wannmensieren.datamodel.LectureModel
 import com.soccergrlstudios.wannmensieren.datamodel.Weekdays
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 import com.soccergrlstudios.wannmensieren.something.Trying
 
 //import com.soccergrlstudios.wannmensieren.JsonSwap.toJson
@@ -70,25 +73,25 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun selectCourseOverview() {
-        /*val searchParams = mapOf(
+        val searchParams = mapOf(
             "semester_key" to "current",
             "order_by" to "title"
         )
-        val courses = TumNatService.fetchCoursesBlocking(searchParams);*/
-        val courses = listOf(
-            CourseModel("Fach1", "001", 1,
-                listOf(
-                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
-                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
-                )
-            ),
-            CourseModel("Fach2", "002", 1,
-                listOf(
-                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
-                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
-                )
-            )
-        )
+        val courses = TumNatService.fetchCoursesBlocking(searchParams);
+//        val courses = listOf(
+//            CourseModel("Fach1", "001", 1,
+//                listOf(
+//                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
+//                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
+//                )
+//            ),
+//            CourseModel("Fach2", "002", 1,
+//                listOf(
+//                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
+//                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
+//                )
+//            )
+//        )
 
         courseNameList = ArrayList()
         for (course in courses){
@@ -139,18 +142,39 @@ class MainActivity : AppCompatActivity() {
         okButton.setOnClickListener {
             selectedCoursesList = mutableListOf()
 
-            for (course in selectedCoursesIndexList){
-                selectedCoursesList.add(courses[course])
+            runBlocking(Dispatchers.IO) {
+                // Nutzung des Repositories wie im CourseSpecificTest
+                val repository = com.soccergrlstudios.wannmensieren.data.repository.CourseRepository(TumNatService.api)
+
+                for (index in selectedCoursesIndexList) {
+                    try {
+                        if (index >= courses.size) continue
+
+                        val basicCourse = courses[index]
+                        val courseId = basicCourse.courseId.toLong()
+
+                        // Der Workflow wie im Test: Details laden & automatisch mappen
+                        val detailedModel = repository.fetchCourseDetails(courseId)
+
+                        // Wenn Details (Termine) gefunden wurden, nutzen wir das neue Modell
+                        if (detailedModel.lectures.isNotEmpty()) {
+                            selectedCoursesList.add(detailedModel)
+                        } else {
+                            // Sonst Fallback auf das Listen-Modell
+                            selectedCoursesList.add(basicCourse)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        // Fehler-Fallback
+                        if (index < courses.size) selectedCoursesList.add(courses[index])
+                    }
+                }
             }
 
             TransitionManager.go(sceneResults)
 
-            //toJson(selectedCoursesList)
-
-            //val results: List<List<CourseModel>> = listOf(selectedCoursesList, selectedCoursesList, selectedCoursesList, courses)
-
-            val results = Trying().maybeAlgo(selectedCoursesList)
-
+            // Ergebnisse anzeigen
+            val results: List<List<CourseModel>> = listOf(selectedCoursesList, selectedCoursesList, selectedCoursesList, courses)
             courseResults(results)
         }
     }

@@ -42,4 +42,13 @@ class CourseRepository(
             .map(CourseMapper::toDomain)
             .filter { it.courseId.isNotBlank() && it.name.isNotBlank() }
     }
+
+    /**
+     * Fetches details for a specific course by its ID.
+     * This is required to get full details including groups and sessions.
+     */
+    suspend fun fetchCourseDetails(courseId: Long): CourseModel {
+        val dto = api.getCourseDetails(courseId)
+        return CourseMapper.toDomain(dto)
+    }
 }
