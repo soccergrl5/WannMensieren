@@ -3,17 +3,18 @@ package com.soccergrlstudios.wannmensieren
 import android.os.Bundle
 import android.transition.Scene
 import android.transition.TransitionManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ListView
-import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.soccergrlstudios.wannmensieren.data.network.TumNatService
 import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
+
 //import com.soccergrlstudios.wannmensieren.JsonSwap.toJson
 
 class MainActivity : AppCompatActivity() {
@@ -71,20 +72,20 @@ class MainActivity : AppCompatActivity() {
             "order_by" to "title"
         )
         val courses = TumNatService.fetchCoursesBlocking(searchParams);
-//        val courses = listOf(
-//            CourseModel("Fach1", "001", 1,
-//                listOf(
-//                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
-//                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
-//                )
-//            ),
-//            CourseModel("Fach2", "002", 1,
-//                listOf(
-//                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
-//                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
-//                )
-//            )
-//        )
+        /*val courses = listOf(
+            CourseModel("Fach1", "001", 1,
+                listOf(
+                    LectureModel(Weekdays.MONDAY, "09:45", "11:15"),
+                    LectureModel(Weekdays.THURSDAY, "13:15", "14:45")
+                )
+            ),
+            CourseModel("Fach2", "002", 1,
+                listOf(
+                    LectureModel(Weekdays.WEDNESDAY, "08:00", "09:30"),
+                    LectureModel(Weekdays.THURSDAY, "08:00", "09:30")
+                )
+            )
+        )*/
 
         courseNameList = ArrayList()
         for (course in courses){
@@ -110,6 +111,26 @@ class MainActivity : AppCompatActivity() {
                 test.setBackgroundResource(R.color.blue)
             }
         }
+
+        courseListDisplay.setOnItemLongClickListener(AdapterView.OnItemLongClickListener{ _, _, pos, _ ->
+
+            var builder = AlertDialog.Builder(this)
+
+            val course = courses[pos]
+
+            builder.setTitle(course.name)
+
+            var infoString = "ID: ${course.courseId}\n\nLectures:\n"
+            for(lecture in course.lectures){
+                infoString += "${lecture.day}: ${lecture.startTime} - ${lecture.endTime}\n"
+            }
+
+            builder.setMessage(infoString)
+
+            builder.show()
+
+            true
+        })
 
         okButton = findViewById(R.id.ok)
         okButton.setOnClickListener {

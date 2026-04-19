@@ -18,7 +18,7 @@
             android:background="#101C85"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
-            app:title="Vorschläge"
+            app:title="Results"
             app:titleTextColor="#FFFFFF" />
 
         <LinearLayout
