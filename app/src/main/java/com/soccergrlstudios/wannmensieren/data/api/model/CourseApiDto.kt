@@ -19,9 +19,12 @@ data class ActivityApiDto(
 
 data class CourseGroupApiDto(
     @SerializedName("id") val id: String? = null,
-    @SerializedName("group_id") val groupId: String? = null,
+    @SerializedName("group_id") val groupId: Any? = null, // Can be String or Long
+    @SerializedName("name") val name: String? = null,
+    @SerializedName("group_name") val groupName: String? = null,
     @SerializedName("type") val type: String? = null,
-    @SerializedName("sessions") val sessions: List<CourseSessionApiDto>? = null
+    @SerializedName("sessions") val sessions: List<CourseSessionApiDto>? = null,
+    @SerializedName("events") val events: List<CourseSessionApiDto>? = null
 )
 
 data class CourseSessionApiDto(
@@ -31,6 +34,5 @@ data class CourseSessionApiDto(
     @SerializedName("start_time") val startTime: String? = null,
     @SerializedName("end") val end: String? = null,
     @SerializedName("end_time") val endTime: String? = null,
-    @SerializedName("room") val room: String? = null,
-    @SerializedName("location") val location: String? = null
+    @SerializedName("room") val room: Any? = null // Can be String or Object in detail API
 )

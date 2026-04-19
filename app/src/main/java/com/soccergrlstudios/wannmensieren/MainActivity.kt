@@ -11,10 +11,13 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.soccergrlstudios.wannmensieren.data.mapper.CourseMapper
 import com.soccergrlstudios.wannmensieren.data.network.TumNatService
 import com.soccergrlstudios.wannmensieren.datamodel.CourseModel
 import com.soccergrlstudios.wannmensieren.datamodel.LectureModel
 import com.soccergrlstudios.wannmensieren.datamodel.Weekdays
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -105,17 +108,40 @@ class MainActivity : AppCompatActivity() {
         okButton = findViewById(R.id.ok)
         okButton.setOnClickListener {
             selectedCoursesList = mutableListOf()
-
-            for (course in selectedCoursesIndexList){
-                selectedCoursesList.add(courses[course])
+            
+            runBlocking(Dispatchers.IO) {
+                // Nutzung des Repositories wie im CourseSpecificTest
+                val repository = com.soccergrlstudios.wannmensieren.data.repository.CourseRepository(TumNatService.api)
+                
+                for (index in selectedCoursesIndexList) {
+                    try {
+                        if (index >= courses.size) continue
+                        
+                        val basicCourse = courses[index]
+                        val courseId = basicCourse.courseId.toLong()
+                        
+                        // Der Workflow wie im Test: Details laden & automatisch mappen
+                        val detailedModel = repository.fetchCourseDetails(courseId)
+                        
+                        // Wenn Details (Termine) gefunden wurden, nutzen wir das neue Modell
+                        if (detailedModel.lectures.isNotEmpty()) {
+                            selectedCoursesList.add(detailedModel)
+                        } else {
+                            // Sonst Fallback auf das Listen-Modell
+                            selectedCoursesList.add(basicCourse)
+                        }
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        // Fehler-Fallback
+                        if (index < courses.size) selectedCoursesList.add(courses[index])
+                    }
+                }
             }
 
             TransitionManager.go(sceneResults)
 
-            //Call Function for Results
-
+            // Ergebnisse anzeigen
             val results: List<List<CourseModel>> = listOf(selectedCoursesList, selectedCoursesList, selectedCoursesList, courses)
-
             courseResults(results)
         }
     }

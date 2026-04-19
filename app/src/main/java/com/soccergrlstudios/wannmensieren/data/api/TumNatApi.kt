@@ -10,4 +10,9 @@ interface TumNatApi {
     suspend fun getCourses(
         @QueryMap(encoded = true) params: Map<String, String>
     ): TumApiResponse<CourseApiDto>
+
+    @GET("api/v1/course/{course_id}")
+    suspend fun getCourseDetails(
+        @retrofit2.http.Path("course_id") courseId: Long
+    ): CourseApiDto
 }
